@@ -1,0 +1,33 @@
+---
+export const prerender = true;
+import { Icon } from "astro-icon";
+import ToolBar from "./ToolBar/ToolBar.astro";
+---
+
+<div class="bg-amazon-header-bg-dark px-6 py-4 flex gap-5 items-center">
+  <!--- Logo --->
+  <img
+    id="amazon-logo"
+    src="/amazon-logo-white.png"
+    alt="amazon logo"
+    class="w-20 md:w-24 cursor-pointer"
+  />
+  <!--- Search Bar --->
+  <div class="flex rounded overflow-hidden flex-grow">
+    <input class="focus:outline-none px-2 block flex-grow" />
+    <Icon
+      class="w-8 p-1 cursor-pointer transition-colors bg-yellow-400 hover:bg-yellow-500"
+      name="heroicons-outline:search"
+    />
+  </div>
+
+  <!--- Tool Bar which includes account, Shopping Cart--->
+  <ToolBar />
+</div>
+
+<script>
+  const logoElement = document.getElementById("amazon-logo");
+  logoElement?.addEventListener("click", () => {
+    window.location.href = "/";
+  });
+</script>
