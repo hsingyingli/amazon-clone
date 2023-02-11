@@ -3,7 +3,6 @@ package api
 import (
 	"authentication/pkg/db"
 	"authentication/pkg/util"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

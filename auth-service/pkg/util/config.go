@@ -16,6 +16,7 @@ type Config struct {
 	SYMMERTICKEY           string        `mapstructure:"SYMMERTICKEY"`
 	ACCESS_TOKEN_DURATION  time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
 	REFRESH_TOKEN_DURATION time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
+	GRPC_PORT              string        `mapstructure:"GRPC_PORT"`
 }
 
 func LoadConfig(path string) (Config, error) {
