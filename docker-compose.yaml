@@ -1,0 +1,53 @@
+version: "3"
+services:
+# ===========================================================
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "9010:9010"
+    environment:
+      DB_URL: auth-db
+    depends_on:
+      - auth-db
+    restart: on-failure
+
+  auth-db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: testsecret
+      POSTGRES_USER: test
+      POSTGRES_DB: test
+    volumes:
+      - auth-data:/var/lib/postgresql/data 
+  
+# ===========================================================
+  
+  product-service:
+    build: ./product-service
+    ports:
+      - "9011:9011"
+    environment:
+      DB_URL: product-db
+    depends_on:
+      - product-db
+    restart: on-failure
+
+  product-db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: testsecret
+      POSTGRES_USER: test
+      POSTGRES_DB: test
+    volumes:
+      - product-data:/var/lib/postgresql/data
+
+# ===========================================================
+
+
+
+volumes:
+  auth-data:
+  product-data:
+
+
+
