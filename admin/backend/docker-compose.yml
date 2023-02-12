@@ -1,0 +1,24 @@
+version: "3"
+services:
+  admin:
+    build: .
+    ports:
+      - "4001:4001"
+    environment:
+      ADMIN_DB_URL: mongodb://root:example@admin-db:27017/
+      PORT: 4001 
+      SALT: 7jGIOqEj1RE
+    depends_on:
+      - admin-db
+    volumes:
+      - ./:/app
+      - /app/node_modules 
+    restart: on-failure
+
+  admin-db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+
