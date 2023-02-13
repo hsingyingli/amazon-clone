@@ -1,3 +1,4 @@
+import { LoadingPage } from "@/components/Loading";
 import { useRefreshToken } from "@/hooks/useRefreshToken";
 import React, { createContext, useEffect, useState } from "react";
 
@@ -47,9 +48,13 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, updateUser }}>
-      {children}
-    </AuthContext.Provider>
+    isLoading ?
+      <LoadingPage />
+      : (
+        <AuthContext.Provider value={{ user, updateUser }}>
+          {children}
+        </AuthContext.Provider >
+      )
   )
 }
 
