@@ -60,25 +60,28 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     setIsLoading(true)
+    const isNotRequiredAuth = path.includes("/login") || path.includes("/signup")
     const initUser = async () => {
       const { user } = await renewAccessAPI()
       setUser(user)
-      const isNotRequiredAuth = path.includes("/login") || path.includes("/signup")
 
       if (user === null && isNotRequiredAuth) {
         setIsLoading(false)
       } else if (user === null && !isNotRequiredAuth) {
         router.push("/login")
-      } else if (user !== null && isNotRequiredAuth) {
-        router.push("/")
-      } else {
-        setIsLoading(false)
       }
     }
+
     if (user === null) {
       initUser()
+      return
     }
 
+    if (user !== null && isNotRequiredAuth) {
+      router.push("/")
+    } else {
+      setIsLoading(false)
+    }
 
   }, [path, user])
 
