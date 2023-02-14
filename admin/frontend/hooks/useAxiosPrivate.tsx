@@ -1,11 +1,9 @@
-import { axiosPrivate } from "@/utils/axios"
+import { axiosPrivate, renewAccessAPI } from "@/utils/axios"
 import { useEffect } from "react"
 import { useAuth } from "./useAuth"
-import { useRefreshToken } from "./useRefreshToken"
 
 const useAxiosPrivate = () => {
-  const { user } = useAuth()
-  const refreshToken = useRefreshToken()
+  const { user, updateUser } = useAuth()
 
   useEffect(() => {
     const reqIntercept = axiosPrivate.interceptors.request.use((config) => {
@@ -21,9 +19,9 @@ const useAxiosPrivate = () => {
         const prevRequest = error?.config;
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true
-          const { user } = await refreshToken()
-          const accessToken = user?.accessToken
-          prevRequest.headers[`Authorization`] = `Bearer ${accessToken}`
+          const { user } = await renewAccessAPI()
+          updateUser(user)
+          prevRequest.headers[`Authorization`] = `Bearer ${user?.accessToken}`
           return axiosPrivate(prevRequest)
         }
 

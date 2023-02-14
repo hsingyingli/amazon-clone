@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap');
 
 * {
   box-sizing: border-box;
@@ -24,8 +25,8 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
+/*@media (prefers-color-scheme: dark) {*/
+  /*html {*/
+    /*color-scheme: dark;*/
+  /*}*/
+/*}*/

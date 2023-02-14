@@ -1,11 +1,16 @@
-import { AuthProvider } from '@/store/providers/AuthProvider'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
+import { AuthProvider } from '@/store/providers/AuthProvider'
+import { Toaster } from "react-hot-toast"
+
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <AuthProvider>
-      <Component {...pageProps} />
-    </AuthProvider>
+    <>
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
+      <Toaster />
+    </>
   )
 }
