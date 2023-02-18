@@ -19,7 +19,7 @@ const configureAdminRoute = (db: MongoDB): Router => {
 
   router.post("/login", controller.loginUser)
   router.post("/logout", controller.logoutUser)
-  router.post("renew_access", controller.renewAccess)
+  router.post("/renew_access", controller.renewAccess)
 
   return router
 }

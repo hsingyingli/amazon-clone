@@ -2,7 +2,10 @@ import cookieParser from "cookie-parser"
 import cors from 'cors';
 import express, { Application } from "express"
 import { configureAdminRoute } from "./routers/admin-router/user-router"
+import { configureCategoryRoute } from "./routers/product-router/category-router";
+import { configureProductRoute } from "./routers/product-router/product-router";
 import { MongoDB } from "./services/admin-service/db"
+import { ProductDB } from "./services/products-service/db";
 
 
 const ORIGIN = process.env.ORIGIN || ""
@@ -20,9 +23,11 @@ const corsOptions = {
 class App {
   private app: Application
   private adminDB: MongoDB
+  private productDB: ProductDB
 
-  constructor(adminDB: MongoDB) {
+  constructor(adminDB: MongoDB, productDB: ProductDB) {
     this.adminDB = adminDB
+    this.productDB = productDB
     this.app = express()
     this.configureMiddleware()
     this.configureRoutes()
@@ -37,8 +42,12 @@ class App {
   private configureRoutes() {
     const adminRouter = configureAdminRoute(this.adminDB)
     this.app.use("", adminRouter)
-    // const productsRouter =
-    //this.app.use("/products")
+
+    const productsRouter = configureProductRoute(this.productDB)
+    this.app.use("/products", productsRouter)
+
+    const categoryRouter = configureCategoryRoute(this.productDB)
+    this.app.use("/categories", categoryRouter)
   }
 
   public listenAndServer(port: string, cb: () => void) {

@@ -5,17 +5,6 @@ import { createToken, verifyToken } from "../../../utils/tokenMaker/jwt-maker";
 import { MongoDB, UserInfo } from "../db";
 import { UserInterface } from "../schemas/userSchema";
 
-interface UserControllerInterface {
-  createUser: (req: Request, res: Response) => Promise<void>
-  getUser: (req: Request, res: Response) => Promise<void>
-  getCurrentUser: (req: AuthRequest, res: Response) => Promise<void>
-  updateUser: (req: Request, res: Response) => Promise<void>
-  deleteUser: (req: Request, res: Response) => Promise<void>
-  loginUser: (req: Request, res: Response) => Promise<void>
-  logoutUser: (req: Request, res: Response) => Promise<void>
-  renewAccess: (req: Request, res: Response) => Promise<void>
-}
-
 type UserResponse = {
   username: string
   email: string
@@ -31,6 +20,18 @@ type LoginUserRequest = {
   email: string
   password: string
 }
+
+interface UserControllerInterface {
+  createUser: (req: Request, res: Response) => Promise<void>
+  getUser: (req: Request, res: Response) => Promise<void>
+  getCurrentUser: (req: AuthRequest, res: Response) => Promise<void>
+  updateUser: (req: Request, res: Response) => Promise<void>
+  deleteUser: (req: Request, res: Response) => Promise<void>
+  loginUser: (req: Request, res: Response) => Promise<void>
+  logoutUser: (req: Request, res: Response) => Promise<void>
+  renewAccess: (req: Request, res: Response) => Promise<void>
+}
+
 
 class UserController implements UserControllerInterface {
   private db: MongoDB
@@ -144,7 +145,7 @@ class UserController implements UserControllerInterface {
 
   public async loginUser(req: Request, res: Response) {
     const { email, password }: LoginUserRequest = req.body
-
+    console.log(email, password)
     try {
       const user = await this.db.findUserByEmail(email)
       if (user === null) {
@@ -172,7 +173,7 @@ class UserController implements UserControllerInterface {
         domain: domain,
         path: "/",
         httpOnly: true,
-        sameSite: 'none',
+        //sameSite: 'none',
         secure: false, // change to true 
         maxAge: parseInt(refreshDuration)
       })
@@ -194,8 +195,8 @@ class UserController implements UserControllerInterface {
         domain: domain,
         path: "/",
         httpOnly: true,
-        sameSite: 'none',
-        secure: true,
+        //sameSite: 'none',
+        secure: false,
         maxAge: -1
       })
       res.status(204)
@@ -212,9 +213,10 @@ class UserController implements UserControllerInterface {
       const accessKey = process.env.ACCESS_SECRET_KEY
       const refreshKey = process.env.REFRESH_SECRET_KEY
       const accessDuration = process.env.ACCESS_DURATION
+      console.log(refreshToken)
 
       console.log("======RENEW======")
-      console.log(req.cookies.nf_refresh_token)
+      console.log(req.cookies.refresh_token)
       console.log("============")
       if (!refreshToken || !refreshKey || !accessKey || !accessDuration) throw Error("")
       const payload = verifyToken(refreshToken, refreshKey)
@@ -235,8 +237,8 @@ class UserController implements UserControllerInterface {
         domain: domain,
         path: "/",
         httpOnly: true,
-        sameSite: 'none',
-        secure: true,
+        //sameSite: 'none',
+        secure: false, // set to true
         maxAge: -1
       })
       res.status(400).send({ error })

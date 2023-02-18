@@ -15,6 +15,7 @@ type UserInfo = {
   role: "admin" | "user"
   password: string
   email: string
+
 }
 
 type UserUpdateOption = {
