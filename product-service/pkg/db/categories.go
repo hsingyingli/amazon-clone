@@ -7,26 +7,24 @@ import (
 
 const createCategory = `
 INSERT INTO categories ( 
-  title, imageUrl
+  title 
 ) VALUES (
-  $1, $2
+  $1
 )
-RETURNING id, title, imageUrl, created_at, updated_at
+RETURNING id, title, created_at, updated_at
 `
 
 type CreateCategoryParam struct {
-	Title    string
-	ImageUrl string
+	Title string
 }
 
 func (store *Store) CreateCategory(ctx context.Context, args CreateCategoryParam) (Category, error) {
-	row := store.db.QueryRowContext(ctx, createCategory, args.Title, args.ImageUrl)
+	row := store.db.QueryRowContext(ctx, createCategory, args.Title)
 	var category Category
 
 	err := row.Scan(
 		&category.ID,
 		&category.Title,
-		&category.ImageUrl,
 		&category.CreatedAt,
 		&category.UpdatedAt,
 	)
@@ -46,7 +44,7 @@ func (store *Store) DeleteCategory(ctx context.Context, id int64) error {
 }
 
 const listCategories = `
-  SELECT id, title, imageUrl, created_at, updated_at
+  SELECT id, title, created_at, updated_at
   FROM categories
   ORDER BY id 
   LIMIT $1
@@ -67,7 +65,6 @@ func (store *Store) listCategories(ctx context.Context, limit int, offset int) (
 		if err := rows.Scan(
 			&category.ID,
 			&category.Title,
-			&category.ImageUrl,
 			&category.CreatedAt,
 			&category.UpdatedAt,
 		); err != nil {
@@ -87,23 +84,20 @@ func (store *Store) listCategories(ctx context.Context, limit int, offset int) (
 const updateCategory = `
   UPDATE categories
   SET title = $2
-  SET imageUrl = $3
-  SET updated_at = $4
+  SET updated_at = $3
   WHERE id = $1
-  RETURNING id, title, imageUrl, created_at, updated_at
+  RETURNING id, title, created_at, updated_at
 `
 
 type UpdateCategoryParam struct {
-	ID       int64
-	Title    string
-	ImageUrl string
+	ID    int64
+	Title string
 }
 
 func (store *Store) UpdateCategory(ctx context.Context, args UpdateCategoryParam) (Category, error) {
 	row := store.db.QueryRowContext(ctx, updateCategory,
 		args.ID,
 		args.Title,
-		args.ImageUrl,
 		time.Now(),
 	)
 
@@ -112,7 +106,6 @@ func (store *Store) UpdateCategory(ctx context.Context, args UpdateCategoryParam
 	err := row.Scan(
 		&category.ID,
 		&category.Title,
-		&category.ImageUrl,
 		&category.CreatedAt,
 		&category.UpdatedAt,
 	)

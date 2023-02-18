@@ -10,13 +10,14 @@ import (
 type CreateProductRequest struct {
 	Title       string `json:"title"`
 	Price       int64  `json:"price"`
+	Amount      int64  `json:"amount"`
 	Description string `json:"description"`
 	ImageUrl    string `json:"imageUrl"`
 	Category_id int64  `json:"category_id"`
 }
 
 func (server *Server) CreateProduct(ctx *gin.Context) {
-	user := ctx.MustGet(authorizationPayloadKey).(*User)
+	_ = ctx.MustGet(authorizationPayloadKey).(*User)
 
 	var req CreateProductRequest
 
@@ -26,9 +27,9 @@ func (server *Server) CreateProduct(ctx *gin.Context) {
 	}
 
 	product, err := server.store.CreateProduct(ctx, db.CreateProductParam{
-		UID:         user.Id,
 		Title:       req.Title,
 		Price:       req.Price,
+		Amount:      req.Amount,
 		Description: req.Description,
 		ImageUrl:    req.ImageUrl,
 		Category_id: req.Category_id,
